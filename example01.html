@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <h1>제한 시간내에 문자 입력하기</h1>
+    <label>
+      금지문자( ,로 나누어 복수입력 가능)
+      <input type="text" v-model="forhiddenText" v-bind:disabled="!isWritable">
+    </label>
+    <br>
+    <label>
+      제한시간을 입력하세요(초)
+      <input type="text" v-model="setTime" v-bind:disabled="!isWritable">
+      <button v-on:click="start" v-bind:disabled="!isWritable">시작</button>
+    </label>
+    <p> 남은 시간 : {{ limitTime }} 초</p>
+    <textarea v-model="inputText" v-bind:disabled="isWritable"></textarea>
+    <p> {{  wordCnt }} 개의 문자를 입력하였습니다.</p>
+    <p> 벌점 : {{ resultScore }} (금지문자 1개당 12점)</p>
+  </div>
+  <script>
+    /*
+    1. 입력금지 문자열을 ,(콤마) 기준으로 입력할 수 있다.
+    2. 제한 시간을 넣고 시작버튼을 누르면 텍스트를 넣을 수 있다.
+    3. 제한 시간이 실시간으로 표시된다.
+    4. 입력 중 문자열이 나올 경우 경고를 뛰우고
+       확인버튼을 누르면 해당문자열은 삭제되며 +10초 추가된다.
+    5. 제한 시간이 완료되면 텍스트 입력창은 비활성화되고
+       입력 창 아래 입력한 문자의 개수가 표시되며
+       금지어를 사용한 횟수 *12 벌점을 출력한다.
+    */
+
+    new Vue({
+      el : '#app',
+      data : {
+        forhiddenText : '', //금지문자를 String 입력
+        isWritable : true, //disabled 속성에 주어지는 값
+        limitTime : 0, //남은시간
+        setTime : 0, //제한시간 설정
+        inputText : '', //입력받은 값
+        timerObj : null, //setInterval 객체
+        wordCnt : 0, //입력받은 문자수
+        forhiddenCnt : 0 //실제로 입력받은 금지문자수
+      },
+      computed : {
+        //데이터 종류 중의 하나, data 속성의 필드들을 이용해서 특정한 연산을 가한 데이터
+        resultScore : function() {
+          return this.forhiddenCnt*12;
+        }
+      },
+      watch : {
+        //data속성의 필드 값의 변화를 감지해서 필요한 프로세스를 진행
+        limitTime : function() {
+          if(this.limitTime <= 0) {
+            alert("제한시간에 도달했습니다.");
+            clearInterval(this.timerObj);
+            this.isWritable = true;
+            this.wordCnt = this.inputText.length;
+          }
+        }
+      },
+      inputText : function() {
+        //입력된 금지어를 배열로 처리
+        let dataList = this.forhiddenText.split(',');
+
+        //배열로 처리된 금지어가 현재 inputText에 포함되어있는지 체크
+        for(let i=0; i<dataList.length; i++) {
+          let pos = this.inputText.indexOf(dataList[i]);
+
+          if(pos > -1) {
+            //금지어가 포홤되어있을 경우 아래의 코드를 실행하도록 함
+            alert(this.forhiddenText + "는 입력할 수 없습니다");
+            this.inputText = this.inputText.substr(0,pos);
+            this.limitTime = this.limitTime + 10;
+            this.forhiddenCnt++;
+            //computed 속성은 의존성을 가지고 있기 때문에 수동으로 수정을 하면 오류가 발생함 "computed 속성은 데이터를 출력할 용도로만 사용 권장"
+            //this.resultScore += 12; => 오류 발생
+          }
+        }
+      },
+      methods : {
+        start : function() {
+          this.isWritable = false;
+          this.limitTime = this.setTime;
+          this.timerObj = setInterval(() => {this.limitTime--}, 1000);
+        }
+      } 
+    })
+  </script>
+</body>
+</html>

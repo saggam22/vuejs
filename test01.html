@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    {{ message + '추가합니다' }}
+    <!--뷰는 자바스크립트 기반이라서 간단한 연산이 가능-->
+    <hr>
+    <h2>클릭하면 카운터가 올라갑니다</h2>
+    <div id="app2">
+      <!-- vue -->
+      <p>{{ count }} 회</p>
+      <p v-show="isOpen">{{ message }}</p>
+      <button v-on:click="countUp">카운터</button>
+      <!-- js -->
+      <p id="pTag"></p>
+      <button id="btn">카운터</button>
+    </div>
+  </div>
+  <script>
+    // let app = new Vue({
+    //   el : '#app',
+    //   data : {
+    //     message : '안녕하세요 Vue!'
+    //   }
+    // });
+
+    var cnt = 0;
+    btn.addEventListener('click', function() {
+      cnt ++;
+      pTag.innerHTML = cnt;
+    })
+
+    let app2 = new Vue({
+      el : '#app2',
+      data : {
+        count : 0,
+        isOpen : false
+      },
+      computed : {
+        message : function() {
+          return "현재" + this.count + "회를 초과했습니다.";
+        }
+      },
+      watch : {
+        count : function(){
+          if(this.count % 5 == 0) {
+            this.isOpen = true;
+          } else {
+            this.isOpen = false;
+          }
+        }
+      },
+      methods : {
+        countUp : function() {
+          this.count = this.count + 1;
+        }
+      }
+    })
+  </script>
+</body>
+</html>

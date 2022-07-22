@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+  <script>
+    /*
+      new Vue({
+        el : HTML 요소 중 연결할 요소를 정의
+        data : {} -> 원본 데이터
+        computed : {} -> 원본 데이터를 사용해서 계산 즉, 출력용
+        watch : {} -> 데이터를 감시 후 변화가 발생했을 때 일어나야하는 프로세스를 정의
+        methods : {} -> 함수
+      })
+    */
+
+    document.addEventListener('DOMContentLoaded', function() {
+      let app = new Vue({
+        el : '#app',
+        data : {
+          myText : '<h1>Hello!!</h1>',
+          myPrice : 500,
+          myName : '홍길동',
+          myArray : ['다즐링', '얼그레이', '실론'],
+          myTea : {
+            name : '홍차',
+            price : 600
+          }
+        }
+      })
+    })
+  </script>
+  <div id="app">
+    <p v-text="myText"></p>
+    <p v-html="myText"></p>
+    <!--템플릿 문법은 일시적으로 영역을 js 영역으로 만듬 / 다른 애들은(?) 컴파일을 따로 해주는 개념 -->
+    <p>{{ myName }}</p>
+    <p>{{ myPrice * 1.1 }}</p>
+    <p>{{ '안녕하세요!' + myName.substr(0,1) + '님' }}</p>
+    <p>{{ myArray[0], myArray[1], myArray[2] }}</p>
+    <p>{{ myTea + ', ' + myTea.name + ' ' + myTea.price + '원'}}</p>
+  </div>
+</body>
+</html>
