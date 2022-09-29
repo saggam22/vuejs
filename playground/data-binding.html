@@ -8,8 +8,22 @@
 </head>
 <body>
   <div id="app">
-    <p>{{ num }}</p>
+    <p v-bind:id="uuid" v-bind:name="name">{{ num }}</p>
     <p>{{ doubleNum }}</p>
+    <!-- DOM을 아예 제거 -->
+    <div v-if="loading">
+      Loading...
+    </div>
+    <div v-else>
+      test user has been logged in
+    </div>
+    <!-- 육안상으로만 보이지 않고 DOM에서는 살아있음 -->
+    <div v-show="loading">
+      Loading...
+    </div>
+    <!-- TODO: 인풋 박스를 만들고 입력된 값을 p 태그에 출력해기 -->
+    <input type="text" v-model="message">
+    <p>{{ message }}</p>
   </div>
   
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -17,7 +31,11 @@
     new Vue({
       el: '#app',
       data: {
-        num: 10
+        num: 10,
+        uuid: 'abc1234',
+        name: 'text-blue',
+        loading: true,
+        message: ''
       },
       computed: {
         doubleNum: function() {
